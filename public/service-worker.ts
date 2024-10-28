@@ -5,8 +5,8 @@ declare const self: ServiceWorkerGlobalScope;
 export default null;
 
 // Type Definitions
-interface ExtendableEventInit extends EventInit {
-  waitUntil(f: Promise<any>): void;
+interface ExtendableEvent extends Event {
+  waitUntil(f: Promise<unknown>): void;
 }
 
 interface FetchEvent extends ExtendableEvent {
@@ -15,11 +15,11 @@ interface FetchEvent extends ExtendableEvent {
 }
 
 interface PushEvent extends ExtendableEvent {
-  data?: PushMessageData;
+  data: PushMessageData | null;
 }
 
 interface PushMessageData {
-  json(): any;
+  json<T>(): T;
   text(): string;
   arrayBuffer(): ArrayBuffer;
 }
@@ -49,6 +49,12 @@ interface WorkboxStrategyOptions {
     cachedResponseWillBeUsed?: (response: Response) => Promise<Response>;
   }>;
   networkTimeoutSeconds?: number;
+}
+
+interface CacheMatchOptions {
+  ignoreSearch?: boolean;
+  ignoreMethod?: boolean;
+  ignoreVary?: boolean;
 }
 
 interface WorkboxType {
@@ -97,7 +103,13 @@ const CACHE_NAMES = {
   api: `api-${CACHE_VERSION}`,
   images: `images-${CACHE_VERSION}`,
   fonts: `fonts-${CACHE_VERSION}`
-} as const;
+};
+
+// Helper function for cache matching
+const matchCache = async (cacheName: string, options?: CacheMatchOptions): Promise<Response> => {
+  const cacheResponse = await caches.match(cacheName, options);
+  return cacheResponse ?? new Response('Not found', { status: 404 });
+};
 
 // Define function declaration
 declare function define(
@@ -131,7 +143,7 @@ const PRECACHE_ASSETS = [
   '/favicon.ico',
   '/_next/static/chunks/main.js',
   '/_next/static/chunks/webpack.js'
-] as const;
+];
 
 define(["./workbox-4754cb34"], function (workbox: WorkboxType) {
   "use strict";
@@ -193,59 +205,67 @@ define(["./workbox-4754cb34"], function (workbox: WorkboxType) {
   workbox.routing.registerRoute(/\.(?:png|jpg|jpeg|svg|gif|webp)$/, cacheFirstStrategy);
 
   // Offline fallback
-  workbox.routing.setCatchHandler(async ({ event }) => {
+  workbox.routing.setCatchHandler(async ({ event }): Promise<Response> => {
     const { request } = event;
 
     switch (request.destination) {
       case 'document':
-        return caches.match('/offline.html') ?? Response.error();
+        return matchCache('/offline.html');
       case 'image':
-        return caches.match('/offline-image.png') ?? Response.error();
+        return matchCache('/offline-image.png');
       default:
-        return Response.error();
+        return new Response('Offline content not available', { status: 404 });
     }
   });
 });
 
 // Event Listeners
-self.addEventListener('install', (event: ExtendableEvent) => {
+self.addEventListener('install', ((event: ExtendableEvent) => {
   event.waitUntil(
     Promise.all([
       caches.open(CACHE_NAMES.static),
       caches.open(CACHE_NAMES.runtime),
     ]).then(() => {
       console.log('Service Worker installed successfully');
+      return Promise.resolve();
     }).catch(error => {
       console.error('Service Worker installation failed:', error);
+      return Promise.reject(error);
     })
   );
-});
+}) as EventListener);
 
-self.addEventListener('activate', (event: ExtendableEvent) => {
+self.addEventListener('activate', ((event: ExtendableEvent) => {
   event.waitUntil(
     caches.keys().then(cacheNames => 
       Promise.all(
         cacheNames
-          .filter(cacheName => !Object.values(CACHE_NAMES).includes(cacheName))
+          .filter(cacheName => {
+            const validCacheNames = Object.values(CACHE_NAMES);
+            return !validCacheNames.includes(cacheName);
+          })
           .map(cacheName => caches.delete(cacheName))
       )
-    ).catch(error => {
+    ).then(() => {
+      console.log('Old caches cleaned up');
+      return Promise.resolve();
+    }).catch(error => {
       console.error('Cache cleanup failed:', error);
+      return Promise.reject(error);
     })
   );
-});
+}) as EventListener);
 
-self.addEventListener('push', (event: PushEvent) => {
+self.addEventListener('push', ((event: PushEvent) => {
   if (!event.data) return;
 
   try {
-    const notification: PushNotification = event.data.json();
+    const notification = event.data.json() as PushNotification;
     event.waitUntil(
       self.registration.showNotification(notification.title, {
         body: notification.body,
         icon: notification.icon ?? '/icon.png',
         data: notification.data ?? {},
-        actions: notification.actions ?? [],
         badge: '/badge.png',
         requireInteraction: false
       })
@@ -253,18 +273,18 @@ self.addEventListener('push', (event: PushEvent) => {
   } catch (error) {
     console.error('Push notification error:', error);
   }
-});
+}) as EventListener);
 
-self.addEventListener('notificationclick', (event: NotificationEvent) => {
+self.addEventListener('notificationclick', ((event: NotificationEvent) => {
   event.notification.close();
 
   if (event.action) {
-    handleNotificationAction(event.action, event.notification.data);
+    handleNotificationAction(event.action, event.notification.data as Record<string, unknown>);
   } else {
     event.waitUntil(
       self.clients.matchAll({ type: 'window' }).then(clients => {
         for (const client of clients) {
-          if (client.url === '/' && 'focus' in client) {
+          if ('url' in client && client.url === '/' && 'focus' in client) {
             return client.focus();
           }
         }
@@ -274,13 +294,15 @@ self.addEventListener('notificationclick', (event: NotificationEvent) => {
       })
     );
   }
-});
+}) as EventListener);
 
 function handleNotificationAction(action: string, data: Record<string, unknown>): void {
   switch (action) {
-    case 'view':
-      void self.clients.openWindow((data.url as string) ?? '/');
+    case 'view': {
+      const url = (data.url as string) ?? '/';
+      void self.clients.openWindow(url);
       break;
+    }
     case 'dismiss':
       // Just close the notification (already done in notificationclick handler)
       break;
@@ -290,19 +312,19 @@ function handleNotificationAction(action: string, data: Record<string, unknown>)
 }
 
 // Error handling
-self.addEventListener('error', (event: ErrorEvent) => {
+self.addEventListener('error', ((event: ErrorEvent) => {
   console.error('Service Worker Error:', {
     message: event.message,
     filename: event.filename,
     lineno: event.lineno,
     colno: event.colno,
-    error: event.error
+    error: event.error as Error
   });
-});
+}) as EventListener);
 
-self.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
+self.addEventListener('unhandledrejection', ((event: PromiseRejectionEvent) => {
   console.error('Service Worker Unhandled Rejection:', {
-    reason: event.reason,
-    promise: event.promise
+    reason: event.reason instanceof Error ? event.reason.message : 'Unknown error',
+    stack: event.reason instanceof Error ? event.reason.stack : undefined
   });
-});
+}) as EventListener);
