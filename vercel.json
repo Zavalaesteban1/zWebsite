@@ -1,0 +1,7 @@
+{
+    "build": {
+      "env": {
+        "CUSTOM_INSTALL_COMMAND": "pnpm install --no-frozen-lockfile"
+      }
+    }
+  }
