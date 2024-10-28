@@ -1,7 +1,7 @@
 if (!self.define) {
   let registry = {};
 
-  const require = (url) => {
+  const require = (url: string) => {
     const baseURL = new URL(".", location).href;
     return registry[new URL(url + ".js", baseURL).href];
   };
