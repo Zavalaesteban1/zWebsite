@@ -1,18 +1,42 @@
-if (!self.define) {
-  let registry = {};
+declare const self: ServiceWorkerGlobalScope;
 
-  const require = (url) => {
+if (!self.define) {
+  let registry: Record<string, any> = {};
+
+  const require = (url: string) => {
     const baseURL = new URL(".", location).href;
     return registry[new URL(url + ".js", baseURL).href];
   };
 
-  self.define = (deps, factory) => {
+  self.define = (deps: string[], factory: (require: (url: string) => any) => void) => {
     const baseURL = new URL(".", location).href;
     registry[baseURL] = factory(require);
   };
 }
 
-define(["./workbox-4754cb34"], function (workbox) {
+interface WorkboxType {
+  skipWaiting: () => void;
+  clientsClaim: () => void;
+  precacheAndRoute: (assets: Array<{ url: string; revision: string | null }>, options?: any) => void;
+  cleanupOutdatedCaches: () => void;
+  strategies: {
+    NetworkFirst: any;
+    StaleWhileRevalidate: any;
+    CacheFirst: any;
+  };
+  routing: {
+    registerRoute: (route: string | RegExp, strategy: any) => void;
+    setCatchHandler: (handler: any) => void;
+  };
+  expiration: {
+    ExpirationPlugin: any;
+  };
+  cacheableResponse: {
+    CacheableResponsePlugin: any;
+  };
+}
+
+define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
   "use strict";
 
   // Initialize workbox
@@ -34,7 +58,7 @@ define(["./workbox-4754cb34"], function (workbox) {
     ],
     {
       ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
-    },
+    }
   );
 
   workbox.cleanupOutdatedCaches();
@@ -50,7 +74,7 @@ define(["./workbox-4754cb34"], function (workbox) {
           maxAgeSeconds: 86400,
         }),
       ],
-    }),
+    })
   );
 
   // Static assets caching
@@ -64,7 +88,7 @@ define(["./workbox-4754cb34"], function (workbox) {
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
-    }),
+    })
   );
 
   // API routes caching
@@ -78,7 +102,7 @@ define(["./workbox-4754cb34"], function (workbox) {
           maxAgeSeconds: 5 * 60, // 5 minutes
         }),
       ],
-    }),
+    })
   );
 
   // Google Fonts caching
@@ -86,7 +110,7 @@ define(["./workbox-4754cb34"], function (workbox) {
     /^https:\/\/fonts\.googleapis\.com/,
     new workbox.strategies.StaleWhileRevalidate({
       cacheName: "google-fonts-stylesheets",
-    }),
+    })
   );
 
   workbox.routing.registerRoute(
@@ -102,7 +126,7 @@ define(["./workbox-4754cb34"], function (workbox) {
           maxEntries: 30,
         }),
       ],
-    }),
+    })
   );
 
   // Image caching
@@ -116,11 +140,11 @@ define(["./workbox-4754cb34"], function (workbox) {
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
-    }),
+    })
   );
 
   // Offline fallback
-  workbox.routing.setCatchHandler(({ event }) => {
+  workbox.routing.setCatchHandler(({ event }: { event: FetchEvent }) => {
     switch (event.request.destination) {
       case "document":
         return caches.match("/offline.html");
@@ -131,44 +155,49 @@ define(["./workbox-4754cb34"], function (workbox) {
         return Response.error();
     }
   });
-
-  // Handle errors
-  self.addEventListener("error", function (event) {
-    console.error("Service Worker Error:", event.error);
-  });
-
-  self.addEventListener("unhandledrejection", function (event) {
-    console.error("Service Worker Unhandled Rejection:", event.reason);
-  });
 });
 
-// Optional: Add listeners for specific scenarios
-self.addEventListener("install", (event) => {
+// Event listeners with TypeScript types
+self.addEventListener("install", (event: ExtendableEvent) => {
   console.log("Service Worker installed");
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", (event: ExtendableEvent) => {
   console.log("Service Worker activated");
 });
 
-self.addEventListener("fetch", (event) => {
-  // You can add specific fetch handling here if needed
+self.addEventListener("fetch", (event: FetchEvent) => {
+  // Add specific fetch handling if needed
 });
 
-self.addEventListener("push", (event) => {
-  // Handle push notifications
+interface PushNotification {
+  title: string;
+  body: string;
+  icon: string;
+}
+
+self.addEventListener("push", (event: PushEvent) => {
   if (event.data) {
-    const notification = event.data.json();
+    const notification: PushNotification = event.data.json();
     self.registration.showNotification(notification.title, {
       body: notification.body,
       icon: notification.icon,
-      // Add other notification options as needed
     });
   }
 });
 
-self.addEventListener("notificationclick", (event) => {
-  // Handle notification clicks
+self.addEventListener("notificationclick", (event: NotificationEvent) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow("/"));
+  event.waitUntil(
+    clients.openWindow("/")
+  );
+});
+
+// Error handling
+self.addEventListener("error", (event: ErrorEvent) => {
+  console.error("Service Worker Error:", event.error);
+});
+
+self.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
+  console.error("Service Worker Unhandled Rejection:", event.reason);
 });
