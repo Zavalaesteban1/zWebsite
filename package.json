@@ -8,7 +8,9 @@
     "lint": "next lint",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "format": "prettier --write ./src/**/*.{ts,tsx,js,jsx,json,md}"
+    "format": "prettier --write ./src/**/*.{ts,tsx,js,jsx,json,md}",
+    "export": "next build && next export",
+    "deploy": "next build && next export && touch out/.nojekyll && gh-pages -d out -t true"
   },
   "dependencies": {
     "@motionone/utils": "^10.17.0",
@@ -48,6 +50,7 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.54.0",
     "eslint-config-next": "^14.0.4",
+    "gh-pages": "^6.2.0",
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",

@@ -42,17 +42,10 @@
 // export default withPWA(nextConfig);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ["localhost"],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
-  },
-};
+  output: 'export',
+  images: { unoptimized: true },
+  assetPrefix: './',
+  basePath: '/https://github.com/Zavalaesteban1/zWebsite', // Replace with your repository name
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

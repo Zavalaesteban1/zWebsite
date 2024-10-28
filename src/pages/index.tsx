@@ -14,6 +14,7 @@ import {
   MonitorSmartphone,
   Computer,
   Wrench,
+  Smartphone,
   CircleUser,
   Linkedin,
 } from "lucide-react";
@@ -267,7 +268,15 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="hover:text-[#770F0F] transition-colors duration-200 hover:underline"
                 >
-                  The University of Texas Rio Grande Valley
+                  The University of Texas Rio Grande Valley<br />
+                </Link>
+                <Link
+                  href="https://visitbtx.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#770F0F] transition-colors duration-200 hover:underline"
+                >
+                  Brownsville, Texas
                 </Link>
               </p>
             </div>
@@ -472,8 +481,8 @@ export default function Home() {
                     I got you.
                   </span>
                 </h2>
-                <p className="mt-2 tracking-tighter text-black text-secondary-foreground">
-                  Here are some some of my skills and my contact info
+                <p className="mt-2 tracking-tighter text-black">
+                  Here are some of my skills and my contact info
                 </p>
               </div>
               {services.map((service) => (
