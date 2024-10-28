@@ -55,7 +55,7 @@ const processImages = [
     image: "/assets/liberty-mutual.jpg",
     url: "https://www.libertymutual.com"
   },
-  
+
   {
     title: "Software Development",
     description: "Creating Software for a hackathon competition",
