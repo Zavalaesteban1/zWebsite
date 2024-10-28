@@ -1,32 +1,14 @@
 if (!self.define) {
-  let e,
-    s = {};
-  const a = (a, n) => (
-    (a = new URL(a + ".js", n).href),
-    s[a] ||
-      new Promise((s) => {
-        if ("document" in self) {
-          const e = document.createElement("script");
-          (e.src = a), (e.onload = s), document.head.appendChild(e);
-        } else (e = a), importScripts(a), s();
-      }).then(() => {
-        let e = s[a];
-        if (!e) throw new Error(`Module ${a} didn’t register its module`);
-        return e;
-      })
-  );
-  self.define = (n, c) => {
-    const i =
-      e ||
-      ("document" in self ? document.currentScript.src : "") ||
-      location.href;
-    if (s[i]) return;
-    let t = {};
-    const r = (e) => a(e, i),
-      o = { module: { uri: i }, exports: t, require: r };
-    s[i] = Promise.all(n.map((e) => o[e] || r(e))).then((e) => (c(...e), t));
+  let e: unknown,  // Add explicit type
+      s: Record<string, unknown> = {};  // Add explicit type for object
+
+  const a = (moduleId: string, baseUrl: string) => {
+    const url = new URL(moduleId + ".js", baseUrl).href;
+    return url;
+
   };
 }
+
 define(["./workbox-4754cb34"], function (e) {
   "use strict";
   importScripts(),
