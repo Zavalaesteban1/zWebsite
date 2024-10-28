@@ -43,30 +43,38 @@ const aboutStats = [
   { label: "Companies worked with", value: "3" },
 ];
 
-const processImages: processImages[] = [
+const processImages = [
   {
     title: "Robot Vision System",
     description: "Developing computer vision algorithms",
-    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/robot-vision.jpg`,
+    image: "/assets/robot-vision.jpg", // Replace with your actual image paths
     url: "https://www.youtube.com/watch?v=CneUl_0Av68"
   },
   {
     title: "Liberty Mutual Project",
     description: "Build an internal Application for tech support",
-    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/liberty-mutual.jpg`,
+    image: "/assets/liberty-mutual.jpg",
     url: "https://www.libertymutual.com"
   },
+
   {
     title: "Software Development",
     description: "Creating Software for a hackathon competition",
-    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/software-dev.jpg`,
+    image: "/assets/software-dev.jpg",
     url: "https://github.com/Zavalaesteban1/clentcare2"
+
   },
+  // {
+  //   title: "Teaching Assistant",
+  //   description: "Mentoring future developers",
+  //   image: "/assets/teaching.jpg",
+  // },
+
   {
     title: "C++ Development",
     description: "Building robot vision with c++",
-    image: `${process.env.NEXT_PUBLIC_BASE_PATH}/assets/cpp-dev2.jpg`,
-    url: "https://github.com/Zavalaesteban1/robotVision"
+    image: "/assets/cpp-dev2.jpg",
+    url: " https://github.com/Zavalaesteban1/robotVision"
   },
 ];
 
@@ -309,7 +317,7 @@ export default function Home() {
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Image
-                src={`${process.env.NEXT_PUBLIC_BASE_PATH}/assets/pumpinggas.jpg`}
+                src="/assets/pumpinggas.jpg"
                 alt="Description"
                 fill
                 priority

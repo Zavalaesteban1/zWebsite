@@ -1,35 +1,21 @@
-import { useEffect } from "react";
-import { type AppType } from "next/dist/shared/lib/utils";
-import "@/styles/globals.css";
-import "@/styles/locomotive-scroll.css";
-import { DM_Sans } from "next/font/google";
+import type { AppProps } from 'next/app'
+import { DM_Sans } from "next/font/google"
+import "@/styles/globals.css"
+import "@/styles/locomotive-scroll.css"
 
 const dmSans = DM_Sans({
-  display: "swap",
-  subsets: ["latin"],
-});
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+})
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-  useEffect(() => {
-    if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/service-worker.js").then(
-          function (registration) {
-            console.log("Service Worker registration successful");
-          },
-          function (err) {
-            console.log("Service Worker registration failed", err);
-          },
-        );
-      });
-    }
-  }, []);
-
+export default function MyApp({ Component, pageProps }: AppProps) {
+  // Remove service worker registration for now to simplify deployment
   return (
-    <div lang={"en"} className={dmSans.className}>
+    <div className={dmSans.className}>
       <Component {...pageProps} />
     </div>
-  );
-};
-
-export default MyApp;
+  )
+}
