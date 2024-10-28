@@ -3,7 +3,7 @@ import Container from "@/components/Container";
 import { useEffect, useRef, Suspense, useState } from "react";
 import styles from "@/styles/Home.module.css";
 import { Button } from "@/components/ui/button";
-import { Cppicon } from './components/Cppicon';
+
 import {
   ChevronRight,
   Code2,
