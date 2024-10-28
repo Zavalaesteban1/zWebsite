@@ -2,14 +2,10 @@
 const nextConfig = {
   output: 'export',
   images: { unoptimized: true },
-  basePath: '',  // Remove basePath for local development
-  assetPrefix: '',  // Remove assetPrefix for local development
+  basePath: process.env.NODE_ENV === 'production' ? '/zWebsite' : '', // Update this with your repo name
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/zWebsite/' : '', // Update this with your repo name
   typescript: {
     ignoreBuildErrors: true,
-  },
-  // Add publicRuntimeConfig
-  publicRuntimeConfig: {
-    basePath: process.env.NODE_ENV === 'production' ? '/zWebsite' : '',
   },
 }
 
