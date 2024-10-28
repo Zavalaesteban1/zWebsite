@@ -2,8 +2,8 @@
 const nextConfig = {
   output: 'export',
   images: { unoptimized: true },
-  basePath: process.env.NODE_ENV === 'production' ? '/zWebsite' : '', // Update this with your repo name
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/zWebsite/' : '', // Update this with your repo name
+  basePath: process.env.NODE_ENV === 'production' ? '/zWebsite' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/zWebsite/' : '',
   typescript: {
     ignoreBuildErrors: true,
   },
