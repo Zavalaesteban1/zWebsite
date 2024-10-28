@@ -1,17 +1,5 @@
-/**
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
- * for Docker builds.
- */
 await import("./src/env.js");
 import WithPWA from "next-pwa";
-
-const withPWA = WithPWA({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  register: true,
-  scope: "/",
-  sw: "service-worker.js.ts",
-});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -28,4 +16,27 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const withPWA = WithPWA({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  scope: "/",
+  sw: "service-worker.js", // Changed to .js as Next.js will handle the compilation
+  // You might also want to add these options for better control
+  runtimeCaching: [
+    {
+      urlPattern: /^https?.*/,
+      handler: "NetworkFirst",
+      options: {
+        cacheName: "offlineCache",
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        },
+      },
+    },
+  ],
+});
+
+// Export the combined configuration
+export default withPWA(nextConfig);
