@@ -1,4 +1,5 @@
 declare const self: ServiceWorkerGlobalScope;
+declare const location: Location; // Add this line
 
 if (!self.define) {
   let registry: Record<string, any> = {};
@@ -8,8 +9,11 @@ if (!self.define) {
     return registry[new URL(url + ".js", baseURL).href];
   };
 
-  self.define = (deps: string[], factory: (require: (url: string) => any) => void) => {
-    const baseURL = new URL(".", location).href;
+  self.define = (
+    deps: string[],
+    factory: (require: (url: string) => any) => void,
+  ) => {
+    const baseURL = new URL(".", self.location.toString()).href;
     registry[baseURL] = factory(require);
   };
 }
@@ -17,7 +21,10 @@ if (!self.define) {
 interface WorkboxType {
   skipWaiting: () => void;
   clientsClaim: () => void;
-  precacheAndRoute: (assets: Array<{ url: string; revision: string | null }>, options?: any) => void;
+  precacheAndRoute: (
+    assets: Array<{ url: string; revision: string | null }>,
+    options?: any,
+  ) => void;
   cleanupOutdatedCaches: () => void;
   strategies: {
     NetworkFirst: any;
@@ -36,7 +43,7 @@ interface WorkboxType {
   };
 }
 
-define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
+define(["./workbox-4754cb34"], function (workbox: WorkboxType) {
   "use strict";
 
   // Initialize workbox
@@ -58,7 +65,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
     ],
     {
       ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
-    }
+    },
   );
 
   workbox.cleanupOutdatedCaches();
@@ -74,7 +81,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
           maxAgeSeconds: 86400,
         }),
       ],
-    })
+    }),
   );
 
   // Static assets caching
@@ -88,7 +95,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
-    })
+    }),
   );
 
   // API routes caching
@@ -102,7 +109,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
           maxAgeSeconds: 5 * 60, // 5 minutes
         }),
       ],
-    })
+    }),
   );
 
   // Google Fonts caching
@@ -110,7 +117,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
     /^https:\/\/fonts\.googleapis\.com/,
     new workbox.strategies.StaleWhileRevalidate({
       cacheName: "google-fonts-stylesheets",
-    })
+    }),
   );
 
   workbox.routing.registerRoute(
@@ -126,7 +133,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
           maxEntries: 30,
         }),
       ],
-    })
+    }),
   );
 
   // Image caching
@@ -140,7 +147,7 @@ define(["./workbox-4754cb34"], function(workbox: WorkboxType) {
           maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
         }),
       ],
-    })
+    }),
   );
 
   // Offline fallback
@@ -188,9 +195,7 @@ self.addEventListener("push", (event: PushEvent) => {
 
 self.addEventListener("notificationclick", (event: NotificationEvent) => {
   event.notification.close();
-  event.waitUntil(
-    clients.openWindow("/")
-  );
+  event.waitUntil(clients.openWindow("/"));
 });
 
 // Error handling
