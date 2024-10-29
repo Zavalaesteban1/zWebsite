@@ -34,34 +34,26 @@ const processImages = [
   {
     title: "Robot Vision System",
     description: "Developing computer vision algorithms",
-    image: "/assets/robot-vision.jpg", // Replace with your actual image paths
+    image: "/zWebsite/assets/robot-vision.jpg", // Add /zWebsite prefix
     url: "https://www.youtube.com/watch?v=CneUl_0Av68"
   },
   {
     title: "Liberty Mutual Project",
     description: "Build an internal Application for tech support",
-    image: "/assets/liberty-mutual.jpg",
+    image: "/zWebsite/assets/liberty-mutual.jpg", // Add /zWebsite prefix
     url: "https://www.libertymutual.com"
   },
-
   {
     title: "Software Development",
     description: "Creating Software for a hackathon competition",
-    image: "/assets/software-dev.jpg",
+    image: "/zWebsite/assets/software-dev.jpg", // Add /zWebsite prefix
     url: "https://github.com/Zavalaesteban1/clentcare2"
-
   },
-  // {
-  //   title: "Teaching Assistant",
-  //   description: "Mentoring future developers",
-  //   image: "/assets/teaching.jpg",
-  // },
-
   {
     title: "C++ Development",
     description: "Building robot vision with c++",
-    image: "/assets/cpp-dev2.jpg",
-    url: " https://github.com/Zavalaesteban1/robotVision"
+    image: "/zWebsite/assets/cpp-dev2.jpg", // Add /zWebsite prefix
+    url: "https://github.com/Zavalaesteban1/robotVision"
   },
 ];
 
@@ -273,7 +265,7 @@ export default function Home() {
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Image
-                src="/assets/pumpinggas.jpg"
+                src="/zWebsite/assets/pumpinggas.jpg"
                 alt="Description"
                 fill
                 priority
