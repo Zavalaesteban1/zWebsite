@@ -344,7 +344,7 @@ export default function Home() {
               💎 Projects
             </span>
             <h2 className="mt-3 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl">
-              Projects from the past year
+              Projects from the past year.
             </h2>
             <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
               I&apos;ve worked on a variety of projects, from creating the
@@ -438,7 +438,7 @@ export default function Home() {
                   </span>
                 </h2>
                 <p className="mt-2 tracking-tighter text-black">
-                  Here are some of my skills and my contact info
+                  Here are some of my skills and my contact info.
                 </p>
               </div>
               {services.map((service) => (
