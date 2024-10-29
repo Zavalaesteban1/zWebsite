@@ -18,6 +18,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "moduleDetection": "force",
+    "esModuleInterop": true,
     "isolatedModules": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
 

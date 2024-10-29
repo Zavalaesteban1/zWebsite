@@ -8,30 +8,17 @@ import {
   ChevronRight,
   Code2,
   Frame,
-  SearchCheck,
-  Eye,
   ChevronLeft,
-  MonitorSmartphone,
   Computer,
   Wrench,
-  Smartphone,
-  CircleUser,
   Linkedin,
+  
 } from "lucide-react";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
-import Spline from "@splinetool/react-spline";
 import Link from "next/link";
 import { cn, scrollTo } from "@/lib/utils";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
+
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
 
@@ -126,9 +113,6 @@ export default function Home() {
   const refScrollContainer = useRef(null); // Reference for scroll container
   const [isScrolled, setIsScrolled] = useState<boolean>(false); // Track scroll state
   // const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null); // Carousel control
-  const [current, setCurrent] = useState<number>(0); // Current carousel slide
-  const [count, setCount] = useState<number>(0); // Total carousel slides
-  const [api, setApi] = useState<CarouselApi>();
   const [currentSlide, setCurrentSlide] = useState(0);
   // useEffect for handling scroll behavior and navigation
   useEffect(() => {
@@ -171,40 +155,12 @@ export default function Home() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  // useEffect for carousel functionality
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
 
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
 
 
   useEffect(() => {
     console.log('Current Slide:', currentSlide);
   }, [currentSlide]);
-
-  // Add click handlers for testing
-  const handlePrevClick = () => {
-    setCurrentSlide(prev => {
-      const newSlide = prev === 0 ? processImages.length - 1 : prev - 1;
-      console.log('Prev clicked, new slide:', newSlide);
-      return newSlide;
-    });
-  };
-
-  const handleNextClick = () => {
-    setCurrentSlide(prev => {
-      const newSlide = prev === processImages.length - 1 ? 0 : prev + 1;
-      console.log('Next clicked, new slide:', newSlide);
-      return newSlide;
-    });
-  };
 
   // useEffect for card hover animations
   useEffect(() => {
@@ -347,7 +303,7 @@ export default function Home() {
               to dive into a new adventure. Mastered C++. Talked and travelled
               to other companies my first year of college. Created software for a robot and
               developed a software product for a company my 2nd year. Now in my
-              3rd year I'm a Teaching Assistant and the future has no limits.
+              3rd year I&apos;m a Teaching Assistant and the future has no limits.
             </h2>
             <div className="grid grid-cols-2 gap-8 xl:grid-cols-3">
               {aboutStats.map((stat) => (
