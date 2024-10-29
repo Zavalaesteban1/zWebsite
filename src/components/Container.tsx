@@ -121,11 +121,11 @@ export default function Container(props: ContainerProps) {
         {/* change probalby with deployment */}
         <meta
           property="og:url"
-          content={`https://zLove.com/${router.asPath}`}
+          content={`https://zavalaesteban1.github.io/zWebsite/${router.asPath}`}
         />
         <link
           rel="canonical"
-          href={`https://zlove.com/${router.asPath}`}
+          href={`https://zavalaesteban1.github.io/zWebsite/${router.asPath}`}
         />
         <meta property="og:type" content={meta.type} />
         <meta property="og:site_name" content="Zavala" />
