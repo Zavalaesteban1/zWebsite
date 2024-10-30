@@ -12,12 +12,13 @@ import {
   Computer,
   Wrench,
   Linkedin,
-  
+
 } from "lucide-react";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { cn, scrollTo } from "@/lib/utils";
 import Image from "next/image";
+import { AiOutlineFilePdf } from 'react-icons/ai';
 
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
@@ -75,14 +76,25 @@ const services = [
   {
     service: "Contact Info",
     description: (
-      <Link
-        href="https://www.linkedin.com/in/zavala0101"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="hover:text-[#770F0F] transition-colors duration-200"
-      >
-        View LinkedIn Profile
-      </Link>
+      <div className="flex flex-col gap-2">
+        <Link
+          href="https://www.linkedin.com/in/zavala0101"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#770F0F] transition-colors duration-200"
+        >
+          View LinkedIn Profile
+        </Link>
+        <Link
+          href="/EzResume.pdf" // Replace with your PDF file path
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#770F0F] transition-colors duration-200"
+        >
+           <AiOutlineFilePdf className="text-xl" />
+          View Resume
+        </Link>
+      </div>
     ),
     icon: Linkedin,
   },
@@ -342,7 +354,8 @@ export default function Home() {
               I&apos;ve worked on a variety of projects, from creating the
               vision of a robot, to developing for Liberty Mutual.
             </p>
-
+            {/* Google Map  */}
+            {/* <iframe src="https://www.google.com/maps/d/embed?mid=1uCzixmtd2_-l4qrlRU6BqczJm80j3QU&ehbc=2E312F" width="640" height="480"></iframe> */}
             {/* Carousel */}
             <div className="relative mx-auto mt-14 max-w-4xl">
               <div className="relative bg-gray-800 rounded-lg">
