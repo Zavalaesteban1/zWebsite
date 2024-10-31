@@ -18,7 +18,7 @@ import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { cn, scrollTo } from "@/lib/utils";
 import Image from "next/image";
-// import { AiOutlineFilePdf } from 'react-icons/ai';
+import { AiOutlineFilePdf } from 'react-icons/ai';
 
 import VanillaTilt from "vanilla-tilt";
 import { motion } from "framer-motion";
@@ -91,12 +91,13 @@ const services = [
           rel="noopener noreferrer"
           className="hover:text-[#770F0F] transition-colors duration-200"
         >
-           {/* <AiOutlineFilePdf className="text-xl" /> */}
+           <AiOutlineFilePdf className="text-xl" />
           View Resume
         </Link>
       </div>
     ),
     icon: Linkedin,
+    
   },
   {
     service: "Full-Stack Development",
