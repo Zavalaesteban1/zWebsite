@@ -304,7 +304,7 @@ export default function Home() {
               >
                 Software Development utilizing C++, React, Javascript, Next.js.
               </Link>{" "}
-              Since 2023, I started coing, changing the game for me. It allowed
+              Since 2023, I started coding, changing the game for me. It allowed
               to dive into a new adventure. Mastered C++. Talked and travelled
               to other companies my first year of college. Created software for a robot and
               developed a software product for a company my 2nd year. Now in my
