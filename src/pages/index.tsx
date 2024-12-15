@@ -46,7 +46,7 @@ const processImages = [
   },
   {
     title: "Software Development",
-    description: "Creating Software for Software Engineering 1 course",
+    description: "Creating Software for a Software Engineering 1 course",
     image: "/zWebsite/assets/PythonWeb.jpg", // Add /zWebsite prefix
     url: "https://github.com/Zavalaesteban1/se1Test"
   },
