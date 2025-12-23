@@ -332,7 +332,7 @@ export default function Home() {
             data-scroll
             data-scroll-speed="-.01"
             id={styles["canvas-container"]}
-            className="mt-14 h-full w-full xl:mt-0"
+            className="relative mt-14 h-full w-full xl:mt-0"
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Image
