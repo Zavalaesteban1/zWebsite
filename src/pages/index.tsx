@@ -12,7 +12,11 @@ import {
   Computer,
   Wrench,
   Linkedin,
-
+  ExternalLink,
+  Github,
+  Calendar,
+  Filter,
+  Star
 } from "lucide-react";
 import { TriangleDownIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -31,31 +35,70 @@ const aboutStats = [
   { label: "Companies worked with", value: "3" },
 ];
 
-const processImages = [
+// Enhanced project data structure with more details and categories
+const projectsData = [
+
   {
+    id: 1,
+    title: "Explore Styles",
+    description: "Architected and built Pinterest's tabbed style exploration feature (70s, 90s, Western, Boho) from end-to-end, including complex API design, native iOS implementation in Swift, and ML model integration. The feature transformed static style suggestions into an interactive exploration experience with carousel components and seamless search.",
+    longDescription: "Optimized the recommendation system by modifying ranking algorithms to prioritize the new feature in top slots, enabling A/B testing across 1M+ users for improved personalized content delivery. Built carousel components, search integration, and seamless user experience.",
+    image: "/assets/ExploreStyles.webm", // Video file instead of image
+    isVideo: true, // Flag to indicate this is a video
+    url: "https://www.pinterest.com",
+    github: "https://github.com/Zavalaesteban1/pinterest-styles",
+    category: ["Mobile", "Full-Stack"], // Multiple categories for cross-platform work
+    technologies: ["Swift", "iOS", "Machine Learning", "API Design"],
+    status: "In Production",
+    featured: true,
+    year: "Pinterest Summer 2025 Internship"
+  },
+  {
+    id: 2,
     title: "Robot Vision System",
-    description: "Developing computer vision algorithms",
-    image: "/zWebsite/assets/robot-vision.jpg", // Add /zWebsite prefix
-    url: "https://www.youtube.com/watch?v=CneUl_0Av68"
+    description: "Advanced computer vision algorithms for autonomous robot navigation and object detection using OpenCV and C++",
+    longDescription: "Developed a comprehensive computer vision system enabling robots to navigate complex environments autonomously. Implemented real-time object detection, path planning, and obstacle avoidance algorithms.",
+    image: "/assets/robot-vision.jpg",
+    isVideo: false,
+    url: "https://www.youtube.com/watch?v=CneUl_0Av68",
+    github: "https://github.com/Zavalaesteban1/robotVision",
+    category: ["AI/ML"],
+    technologies: ["C++", "OpenCV", "Computer Vision", "Robotics"],
+    status: "Completed",
+    featured: true,
+    year: "2024"
   },
   {
-    title: "Liberty Mutual Project",
-    description: "Build an internal Application for tech support",
-    image: "/zWebsite/assets/liberty-mutual.jpg", // Add /zWebsite prefix
-    url: "https://www.libertymutual.com"
+    id: 3,
+    title: "Enterprise Support Dashboard",
+    description: "Internal technical support application built for Liberty Mutual to streamline customer service operations",
+    longDescription: "Designed and developed a full-stack internal application for Liberty Mutual's technical support team, improving ticket resolution time by 40% and enhancing team collaboration.",
+    image: "/assets/liberty-mutual.jpg",
+    isVideo: false,
+    url: "https://www.libertymutual.com",
+    github: null,
+    category: ["Full-Stack"], // Can add more categories if needed
+    technologies: ["React", "Node.js", "TypeScript", "PostgreSQL", "REST APIs"],
+    status: "In Production",
+    featured: true,
+    year: "2024"
   },
   {
-    title: "Software Development",
-    description: "Creating Software for a Software Engineering 1 course",
-    image: "/zWebsite/assets/PythonWeb.jpg", // Add /zWebsite prefix
-    url: "https://github.com/Zavalaesteban1/se1Test"
+    id: 4,
+    title: "AI Translation Bot",
+    description: "Real-time language translation bot with voice recognition and natural language processing capabilities",
+    longDescription: "Built an intelligent translation system that processes voice input, translates in real-time, and provides audio output. Features include multi-language support, context awareness, and offline capabilities for enhanced user experience.",
+    image: "/assets/translate_bot.webm",
+    isVideo: true,
+    url: "https://github.com/Zavalaesteban1/ai-translator",
+    github: "https://github.com/Zavalaesteban1/ai-translator",
+    category: ["AI/ML", "Full-Stack"], // AI processing with full-stack implementation
+    technologies: ["Python", "Speech Recognition", "NLP", "TensorFlow", "Flask"],
+    status: "Completed",
+    featured: true,
+    year: "2024"
   },
-  {
-    title: "C++ Development",
-    description: "Building robot vision with c++",
-    image: "/zWebsite/assets/cpp-dev2.jpg", // Add /zWebsite prefix
-    url: "https://github.com/Zavalaesteban1/robotVision"
-  },
+
 ];
 
 const services = [
@@ -117,8 +160,28 @@ export default function Home() {
   // State management
   const refScrollContainer = useRef(null); // Reference for scroll container
   const [isScrolled, setIsScrolled] = useState<boolean>(false); // Track scroll state
-  // const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null); // Carousel control
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // Projects state
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [showFeaturedOnly, setShowFeaturedOnly] = useState<boolean>(false);
+  
+  // Get unique categories (supporting both single and multiple categories)
+  const categories = ["All", ...Array.from(new Set(
+    projectsData.flatMap(project => 
+      Array.isArray(project.category) ? project.category : [project.category]
+    )
+  ))];
+  
+  // Filter projects based on selected category and featured status
+  const filteredProjects = projectsData.filter(project => {
+    const categoryMatch = selectedCategory === "All" || 
+      (Array.isArray(project.category) 
+        ? project.category.includes(selectedCategory)
+        : project.category === selectedCategory);
+    const featuredMatch = !showFeaturedOnly || project.featured;
+    return categoryMatch && featuredMatch;
+  });
   // useEffect for handling scroll behavior and navigation
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -163,9 +226,6 @@ export default function Home() {
 
 
 
-  useEffect(() => {
-    console.log('Current Slide:', currentSlide);
-  }, [currentSlide]);
 
   // useEffect for card hover animations
   useEffect(() => {
@@ -278,7 +338,7 @@ export default function Home() {
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Image
-                src="/zWebsite/assets/pumpinggas.jpg"
+                src="/assets/z956.JPG"
                 alt="Description"
                 fill
                 priority
@@ -329,91 +389,233 @@ export default function Home() {
         </section>
         {/* Projects */}
         <section id="projects" data-scroll-section>
-          {/* Gradient */}
-          <div className="relative isolate -z-10">
+          {/* Background Gradient */}
+          <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
             <div
-              className="absolute inset-x-0 -top-40 transform-gpu overflow-hidden blur-[100px] sm:-top-80 lg:-top-60"
-              aria-hidden="true"
-            >
-              <div
-                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary via-primary to-secondary opacity-10 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+              className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary via-primary to-secondary opacity-5 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                 style={{
-                  clipPath:
-                    "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+                clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
                 }}
               />
-            </div>
           </div>
-          <div data-scroll data-scroll-speed=".4" className="my-64">
+          
+          <div data-scroll data-scroll-speed=".4" className="my-32">
+            {/* Section Header */}
+            <div className="text-center mb-16">
             <span className="text-gradient clash-grotesk text-sm font-semibold tracking-tighter">
-              💎 Projects
+                💎 Featured Work
             </span>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tight tracking-tighter xl:text-6xl">
-              Projects from the past year.
+              <h2 className="mt-3 text-4xl font-semibold tracking-tight xl:text-6xl">
+                Recent Projects & Innovations
             </h2>
-            <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
-              I&apos;ve worked on a variety of projects, from creating the
-              vision of a robot, to developing for Liberty Mutual.
-            </p>
-            {/* Google Map  */}
-            {/* <iframe src="https://www.google.com/maps/d/embed?mid=1uCzixmtd2_-l4qrlRU6BqczJm80j3QU&ehbc=2E312F" width="640" height="480"></iframe> */}
-            {/* Carousel */}
-            <div className="relative mx-auto mt-14 max-w-4xl">
-              <div className="relative bg-gray-800 rounded-lg">
-                {/* Main Image Container */}
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
-                  <Link
-                    href={processImages[currentSlide].url || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cursor-pointer"
-                  >
-                    <Image
-                      src={processImages[currentSlide].image}
-                      alt={processImages[currentSlide].title}
-                      fill
-                      className="object-cover transition-transform duration-300 hover:scale-105"
-                      priority
-                    />
+              <p className="mt-4 max-w-2xl mx-auto text-base tracking-tight text-muted-foreground xl:text-lg">
+                From AI-powered applications to enterprise solutions, here's a showcase of my recent development work across various technologies and domains.
+              </p>
+            </div>
 
-                    {/* Title and Description */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/50">
-                      <h3 className="text-white text-xl font-bold">
-                        {processImages[currentSlide].title}
-                      </h3>
-                      <p className="text-white/80">
-                        {processImages[currentSlide].description}
-                      </p>
-                    </div>
-                  </Link>
+            {/* Filter Controls */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+              {/* Category Filter */}
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={cn(
+                      "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                      selectedCategory === category
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <Filter className="w-4 h-4 inline mr-2" />
+                    {category}
+                  </button>
+                ))}
                 </div>
 
-                {/* Navigation Buttons - Made Larger and More Visible */}
+              {/* Featured Toggle */}
                 <button
-                  onClick={() => setCurrentSlide(prev =>
-                    prev === 0 ? processImages.length - 1 : prev - 1
-                  )}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/20 hover:bg-white/40 p-3 rounded-full transition-all duration-200 backdrop-blur-sm"
-                >
-                  <ChevronLeft className="h-8 w-8 text-white" />
-                </button>
+                onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                  showFeaturedOnly
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-primary/10 text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Star className="w-4 h-4 inline mr-2" />
+                Featured Only
+              </button>
+            </div>
 
-                <button
-                  onClick={() => setCurrentSlide(prev =>
-                    prev === processImages.length - 1 ? 0 : prev + 1
-                  )}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/20 hover:bg-white/40 p-3 rounded-full transition-all duration-200 backdrop-blur-sm"
+            {/* Projects Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group relative bg-background/80 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary/20 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5"
                 >
-                  <ChevronRight className="h-8 w-8 text-white" />
-                </button>
+                  {/* Featured Badge */}
+                  {project.featured && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                        <Star className="w-3 h-3" />
+                        Featured
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Project Image/Video */}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    {project.isVideo ? (
+                      <video
+                        src={project.image}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    {/* Hover Actions */}
+                    <div className="absolute inset-0 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <Link
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white/90 text-foreground p-3 rounded-full hover:bg-white transition-colors duration-200"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </Link>
+                      {project.github && (
+                        <Link
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-white/90 text-foreground p-3 rounded-full hover:bg-white transition-colors duration-200"
+                        >
+                          <Github className="w-4 h-4" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Project Content */}
+                  <div className="p-6">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors duration-200">
+                          {project.title}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex flex-wrap gap-1">
+                            {(Array.isArray(project.category) ? project.category : [project.category]).map((cat) => (
+                              <span key={cat} className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground">
+                                {cat}
+                              </span>
+                            ))}
+                          </div>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {project.year}
+                          </span>
+                        </div>
+                      </div>
+                      <div className={cn(
+                        "text-xs px-2 py-1 rounded-full",
+                        project.status === "Completed" 
+                          ? "bg-green-100 text-green-800" 
+                          : project.status === "In Development" 
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      )}>
+                        {project.status}
+                      </div>
               </div>
 
-              {/* Slide Counter */}
-              <div className="mt-4 text-center">
-                <span className="bg-[#770F0F] px-4 py-2 rounded-full text-white font-medium transition-all duration-200 hover:bg-[#8B1212]">
-                  {currentSlide + 1} / {processImages.length}
+                    {/* Description */}
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                      {project.description}
+                    </p>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {project.technologies.slice(0, 4).map((tech) => (
+                        <span
+                          key={tech}
+                          className="text-xs px-2 py-1 bg-primary/5 text-primary rounded border border-primary/10"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 4 && (
+                        <span className="text-xs px-2 py-1 bg-muted text-muted-foreground rounded">
+                          +{project.technologies.length - 4} more
                 </span>
+                      )}
+                    </div>
+
+                    {/* Action Links */}
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1 transition-colors duration-200"
+                      >
+                        View Project <ExternalLink className="w-3 h-3" />
+                      </Link>
+                      {project.github && (
+                        <Link
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-foreground text-sm font-medium flex items-center gap-1 transition-colors duration-200"
+                        >
+                          Source Code <Github className="w-3 h-3" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Show message when no projects match filters */}
+            {filteredProjects.length === 0 && (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground">
+                  No projects match the current filters. Try adjusting your selection.
+                </p>
               </div>
+            )}
+
+            {/* Call to Action */}
+            <div className="text-center mt-16">
+              <p className="text-muted-foreground mb-4">
+                Interested in collaborating or learning more about these projects?
+              </p>
+              <Link href="mailto:zavala.esteban105690@gmail.com" passHref>
+                <Button size="lg">
+                  Let's Connect <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -477,8 +679,7 @@ export default function Home() {
               <span className="text-gradient clash-grotesk">.</span>
             </h2>
             <p className="mt-1.5 text-base tracking-tight text-muted-foreground xl:text-lg">
-              Interested in Internships for C++, Software Development, and
-              Software Eningeering(Front-end)
+              Interested in Ios Mobile Development, Full-Stack Development, and AI agents Development
             </p>
             <Link href="mailto:zavala.esteban105690@gmail.com" passHref>
               <Button className="mt-6">Get in touch</Button>
