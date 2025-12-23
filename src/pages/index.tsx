@@ -336,7 +336,7 @@ export default function Home() {
           >
             <Suspense fallback={<span>Loading...</span>}>
               <Image
-                src="/assets/z956.JPG"
+                src="/zWebsite/assets/z956.JPG"
                 alt="Description"
                 fill
                 priority
