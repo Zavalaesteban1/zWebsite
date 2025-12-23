@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Code2,
   Frame,
-  ChevronLeft,
   Computer,
   Wrench,
   Linkedin,
@@ -160,7 +159,6 @@ export default function Home() {
   // State management
   const refScrollContainer = useRef(null); // Reference for scroll container
   const [isScrolled, setIsScrolled] = useState<boolean>(false); // Track scroll state
-  const [currentSlide, setCurrentSlide] = useState(0);
   
   // Projects state
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -409,7 +407,7 @@ export default function Home() {
                 Recent Projects & Innovations
             </h2>
               <p className="mt-4 max-w-2xl mx-auto text-base tracking-tight text-muted-foreground xl:text-lg">
-                From AI-powered applications to enterprise solutions, here's a showcase of my recent development work across various technologies and domains.
+                From AI-powered applications to enterprise solutions, here&apos;s a showcase of my recent development work across various technologies and domains.
               </p>
             </div>
 
@@ -613,7 +611,7 @@ export default function Home() {
               </p>
               <Link href="mailto:zavala.esteban105690@gmail.com" passHref>
                 <Button size="lg">
-                  Let's Connect <ChevronRight className="ml-1 h-4 w-4" />
+                  Let&apos;s Connect <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </Link>
             </div>
